@@ -21,7 +21,7 @@ urlpatterns = [
     path('register/', register_user_view, name='register'),
     path('delete/', delete_user_view, name='delete-user'),
     path('change-password/', change_password_view, name='change-password'),
-    
+
     # Include router URLs for ViewSets
     path('', include(router.urls)),
 ]
