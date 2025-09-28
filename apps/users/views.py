@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
-from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth import logout
+from django.db.models import Q
 from rest_framework import viewsets, permissions, status, parsers, filters
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, action, permission_classes
@@ -52,7 +53,7 @@ def delete_user_view(request: Request) -> Response:
             {"detail": f"User '{username}' has been deleted successfully"},
             status=status.HTTP_204_NO_CONTENT
         )
-    except Exception as e:
+    except Exception:
         return Response(
             {"error": "An error occurred while deleting the user"},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -219,10 +220,10 @@ def change_password_view(request: Request) -> Response:
     user.set_password(new_password)
     user.save()
 
-    # Keep user logged in after password change
-    update_session_auth_hash(request, user)
+    # Log out the user for security (they need to login with new password)
+    logout(request)
 
     return Response(
-        {'detail': 'Your password has been successfully changed.'},
+        {'detail': 'Your password has been successfully changed. Please log in again with your new password.'},
         status=status.HTTP_200_OK
     )
