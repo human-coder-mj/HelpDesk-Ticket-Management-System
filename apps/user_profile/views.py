@@ -65,7 +65,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
     ViewSet for managing user profiles
     Users can only access and modify their own profile
     """
-    queryset = UserProfile.objects.all()
+
     serializer_class = ProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
     parser_classes = [parsers.JSONParser, parsers.FormParser, parsers.MultiPartParser]
@@ -141,7 +141,6 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     ViewSet for user search and listing
     Provides search functionality with nameEmail computed field
     """
-    queryset = User.objects.select_related('profile').all()
     serializer_class = UserSearchSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]

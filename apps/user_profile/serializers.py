@@ -31,7 +31,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password', 'password_confirm', 'profile')
+        fields = ('username', 'email', 'password', 'password_confirm')
         extra_kwargs = {
             'password': {'write_only': True},
             'email': {'required': True},
@@ -70,7 +70,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'date_joined', 'profile')
+        fields = ('id', 'username', 'email', 'date_joined')
 
     def get_profile(self, obj):
         """
@@ -86,13 +86,10 @@ class ProfileSerializer(serializers.ModelSerializer):
     """
     Serializer for user profile
     """
-    nameEmail = serializers.ReadOnlyField()
-    full_name = serializers.ReadOnlyField()
 
     class Meta:
         model = UserProfile
-        fields = ('id', 'first_name', 'last_name', 'role', 'phone',
-                 'department', 'created_at', 'updated_at', 'nameEmail', 'full_name')
+        fields = ('id', 'first_name', 'last_name', 'role', 'phone', 'department', 'created_at', 'updated_at', 'nameEmail', 'full_name')
         read_only_fields = ('id', 'created_at', 'updated_at', 'nameEmail', 'full_name')
 
 
@@ -118,8 +115,8 @@ class UserSearchSerializer(serializers.ModelSerializer):
     """
     Serializer for user search results
     """
-    nameEmail = serializers.ReadOnlyField(source='profile.nameEmail')
-    role_display = serializers.ReadOnlyField(source='profile.get_role_display')
+    nameEmail = serializers.ReadOnlyField(source='user_profile.nameEmail')
+    role_display = serializers.ReadOnlyField(source='user_profile.get_role_display')
 
     class Meta:
         model = User

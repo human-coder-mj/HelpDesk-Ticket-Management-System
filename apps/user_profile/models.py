@@ -18,7 +18,7 @@ class UserProfile(models.Model):
         (ADMIN, 'Admin'),
     ]
     
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200, blank=True)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default=USER)
