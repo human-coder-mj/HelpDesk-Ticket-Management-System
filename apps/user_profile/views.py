@@ -46,11 +46,11 @@ def delete_user_view(request: Request) -> Response:
     This will also delete the associated profile due to CASCADE
     """
     try:
-        user = request.user
+        user = User.objects.get(id=request.user.id)
         username = user.username
         user.delete()
         return Response(
-            {"detail": f"User '{username}' has been deleted successfully"},
+            {"detail": f"User {username} has been deleted successfully"},
             status=status.HTTP_204_NO_CONTENT
         )
     except Exception:
@@ -65,7 +65,6 @@ class ProfileViewSet(viewsets.ModelViewSet):
     ViewSet for managing user profiles
     Users can only access and modify their own profile
     """
-
     serializer_class = ProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
     parser_classes = [parsers.JSONParser, parsers.FormParser, parsers.MultiPartParser]
@@ -97,11 +96,11 @@ class ProfileViewSet(viewsets.ModelViewSet):
         try:
             profile = UserProfile.objects.get(user=request.user)
             serializer = self.get_serializer(profile, data=request.data, partial=True)
-            
+
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
-            
+
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except UserProfile.DoesNotExist:
             return Response(
@@ -154,7 +153,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
         Supports searching by nameEmail computed field
         """
         queryset = User.objects.select_related('profile').all()
-        
+
         # Search by nameEmail format: "FirstName LastName - Email"
         name_email_search = self.request.query_params.get('nameEmail', None)
         if name_email_search:
@@ -164,7 +163,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
                 Q(email__icontains=name_email_search) |
                 Q(username__icontains=name_email_search)
             )
-        
+
         return queryset
 
     @action(detail=False, methods=['get'], url_path='search')
@@ -174,7 +173,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
         Advanced user search with nameEmail support
         """
         queryset = self.filter_queryset(self.get_queryset())
-        
+
         # Paginate results
         page = self.paginate_queryset(queryset)
         if page is not None:

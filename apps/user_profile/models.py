@@ -28,7 +28,7 @@ class UserProfile(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = 'User Profile'
+        verbose_name = 'User Profiile'
         verbose_name_plural = 'User Profiles'
         ordering = ['-created_at']
 
