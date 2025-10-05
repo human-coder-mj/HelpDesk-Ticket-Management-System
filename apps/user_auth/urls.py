@@ -8,7 +8,5 @@ from . import views
 app_name = 'user_auth'
 
 urlpatterns = [
-    # Authentication endpoints
-    path('login/', views.login_user_view, name='login'),
-    path('logout/', views.logout_user_view, name='logout'),
+    path('login/', views.LoginUserView.as_view(),  name='login'),
 ]
